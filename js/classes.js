@@ -107,7 +107,6 @@ class Fighter extends Sprite {
     if (!this.dead) {
       this.animateFrames();
     }
-
     this.hitBox.position.x = this.position.x + this.hitBox.offset.x;
     this.hitBox.position.y = this.position.y + this.hitBox.offset.y;
 

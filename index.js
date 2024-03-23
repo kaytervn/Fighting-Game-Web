@@ -79,8 +79,8 @@ player = new Fighter({
     },
   },
   attackBox: {
-    offset: { x: 140, y: 20 },
-    width: 200,
+    offset: { x: 50, y: 20 },
+    width: 300,
     height: 50,
   },
   hitBox: {
@@ -138,8 +138,8 @@ enemy = new Fighter({
     },
   },
   attackBox: {
-    offset: { x: -155, y: 40 },
-    width: 200,
+    offset: { x: -155, y: 30 },
+    width: 260,
     height: 50,
   },
   hitBox: {
