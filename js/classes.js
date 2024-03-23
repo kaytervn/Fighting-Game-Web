@@ -147,7 +147,11 @@ class Fighter extends Sprite {
   }
 
   attack() {
-    this.switchSprite("attack1");
+    if (Math.random() >= 0.5 ? 1 : 0 == 1) {
+      this.switchSprite("attack1");
+    } else {
+      this.switchSprite("attack2");
+    }
     this.isAttacking = true;
   }
 
@@ -162,13 +166,12 @@ class Fighter extends Sprite {
 
   switchSprite(sprite) {
     if (
-      this.image == this.sprites.attack1.image &&
-      this.framesCurrent < this.sprites.attack1.framesMax - 1
-    )
-      return;
-    if (
-      this.image == this.sprites.takeHit.image &&
-      this.framesCurrent < this.sprites.takeHit.framesMax - 1
+      (this.image == this.sprites.attack1.image &&
+        this.framesCurrent < this.sprites.attack1.framesMax - 1) ||
+      (this.image == this.sprites.attack2.image &&
+        this.framesCurrent < this.sprites.attack2.framesMax - 1) ||
+      (this.image == this.sprites.takeHit.image &&
+        this.framesCurrent < this.sprites.takeHit.framesMax - 1)
     )
       return;
     if (this.image == this.sprites.death.image) {
@@ -211,6 +214,13 @@ class Fighter extends Sprite {
         if (this.image != this.sprites.attack1.image) {
           this.image = this.sprites.attack1.image;
           this.framesMax = this.sprites.attack1.framesMax;
+          this.framesCurrent = 0;
+        }
+        break;
+      case "attack2":
+        if (this.image != this.sprites.attack2.image) {
+          this.image = this.sprites.attack2.image;
+          this.framesMax = this.sprites.attack2.framesMax;
           this.framesCurrent = 0;
         }
         break;

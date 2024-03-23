@@ -29,8 +29,8 @@ const shop = new Sprite({
 
 player = new Fighter({
   position: {
-    x: 0,
-    y: 0,
+    x: 100,
+    y: 100,
   },
   velocity: { x: 0, y: 0 },
   offset: {
@@ -65,6 +65,10 @@ player = new Fighter({
       imageSrc: "./img/samuraiMack/Attack1.png",
       framesMax: 6,
     },
+    attack2: {
+      imageSrc: "./img/samuraiMack/Attack2.png",
+      framesMax: 6,
+    },
     takeHit: {
       imageSrc: "./img/samuraiMack/Take hit.png",
       framesMax: 4,
@@ -88,7 +92,7 @@ player = new Fighter({
 
 enemy = new Fighter({
   position: {
-    x: 400,
+    x: 1100,
     y: 100,
   },
   velocity: { x: 0, y: 0 },
@@ -118,6 +122,10 @@ enemy = new Fighter({
     },
     attack1: {
       imageSrc: "./img/kenji/Attack1.png",
+      framesMax: 4,
+    },
+    attack2: {
+      imageSrc: "./img/kenji/Attack2.png",
       framesMax: 4,
     },
     takeHit: {
