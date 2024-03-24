@@ -8,6 +8,8 @@ c.fillRect(0, 0, canvas.width, canvas.height);
 
 const gravity = 0.7;
 
+let end = false;
+
 const background = new Sprite({
   position: {
     x: 0,
@@ -27,128 +29,6 @@ const shop = new Sprite({
   framesMax: 6,
 });
 
-player = new Fighter({
-  position: {
-    x: 100,
-    y: 100,
-  },
-  velocity: { x: 0, y: 0 },
-  offset: {
-    x: 0,
-    y: 0,
-  },
-  imageSrc: "./img/samuraiMack/Idle.png",
-  framesMax: 8,
-  scale: 3,
-  offset: {
-    x: 215,
-    y: 210,
-  },
-  sprites: {
-    idle: {
-      imageSrc: "./img/samuraiMack/Idle.png",
-      framesMax: 8,
-    },
-    run: {
-      imageSrc: "./img/samuraiMack/Run.png",
-      framesMax: 8,
-    },
-    jump: {
-      imageSrc: "./img/samuraiMack/Jump.png",
-      framesMax: 2,
-    },
-    fall: {
-      imageSrc: "./img/samuraiMack/Fall.png",
-      framesMax: 2,
-    },
-    attack1: {
-      imageSrc: "./img/samuraiMack/Attack1.png",
-      framesMax: 6,
-    },
-    attack2: {
-      imageSrc: "./img/samuraiMack/Attack2.png",
-      framesMax: 6,
-    },
-    takeHit: {
-      imageSrc: "./img/samuraiMack/Take hit.png",
-      framesMax: 4,
-    },
-    death: {
-      imageSrc: "./img/samuraiMack/Death.png",
-      framesMax: 6,
-    },
-  },
-  attackBox: {
-    offset: { x: 50, y: 20 },
-    width: 300,
-    height: 50,
-  },
-  hitBox: {
-    offset: { x: 50, y: 20 },
-    width: 70,
-    height: 135,
-  },
-});
-
-enemy = new Fighter({
-  position: {
-    x: 1100,
-    y: 100,
-  },
-  velocity: { x: 0, y: 0 },
-  scale: 3,
-  offset: {
-    x: 215,
-    y: 229,
-  },
-  imageSrc: "./img/kenji/Idle.png",
-  framesMax: 4,
-  sprites: {
-    idle: {
-      imageSrc: "./img/kenji/Idle.png",
-      framesMax: 4,
-    },
-    run: {
-      imageSrc: "./img/kenji/Run.png",
-      framesMax: 8,
-    },
-    jump: {
-      imageSrc: "./img/kenji/Jump.png",
-      framesMax: 2,
-    },
-    fall: {
-      imageSrc: "./img/kenji/Fall.png",
-      framesMax: 2,
-    },
-    attack1: {
-      imageSrc: "./img/kenji/Attack1.png",
-      framesMax: 4,
-    },
-    attack2: {
-      imageSrc: "./img/kenji/Attack2.png",
-      framesMax: 4,
-    },
-    takeHit: {
-      imageSrc: "./img/kenji/Take hit.png",
-      framesMax: 3,
-    },
-    death: {
-      imageSrc: "./img/kenji/Death.png",
-      framesMax: 7,
-    },
-  },
-  attackBox: {
-    offset: { x: -155, y: 30 },
-    width: 260,
-    height: 50,
-  },
-  hitBox: {
-    offset: { x: 50, y: 0 },
-    width: 55,
-    height: 155,
-  },
-});
-
 const key = {
   a: {
     pressed: false,
@@ -163,6 +43,12 @@ const key = {
     pressed: false,
   },
 };
+
+const listPlayer = [samuraiMack, robin, yangLee];
+const listEnemy = [kenji, kingRichard, poorGuy];
+
+player = listPlayer[Math.floor(Math.random() * listPlayer.length)];
+enemy = listEnemy[Math.floor(Math.random() * listEnemy.length)];
 
 decreaseTimer();
 
@@ -213,24 +99,34 @@ function animate() {
     enemy.switchSprite("fall");
   }
 
-  if (player.isAttacking && player.framesCurrent == 4) {
+  if (player.isAttacking && player.framesCurrent == player.attackFrame) {
     player.isAttacking = false;
-    if (isColliding({ attackBox: player.attackBox, hitBox: enemy.hitBox })) {
-      enemy.takeHit();
+    if (
+      !end &&
+      isColliding({ attackBox: player.attackBox, hitBox: enemy.hitBox })
+    ) {
+      enemy.takeHit(
+        parseInt((1000 * player.attackFrame) / player.attackBox.width)
+      );
       gsap.to("#enemyHealth", { width: enemy.health + "%" });
     }
   }
 
-  if (enemy.isAttacking && enemy.framesCurrent == 1) {
+  if (enemy.isAttacking && enemy.framesCurrent == enemy.attackFrame) {
     enemy.isAttacking = false;
-    if (isColliding({ attackBox: enemy.attackBox, hitBox: player.hitBox })) {
-      player.takeHit();
+    if (
+      !end &&
+      isColliding({ attackBox: enemy.attackBox, hitBox: player.hitBox })
+    ) {
+      player.takeHit(
+        parseInt((1000 * enemy.attackFrame) / enemy.attackBox.width)
+      );
       gsap.to("#playerHealth", { width: player.health + "%" });
     }
   }
 
   if (player.health <= 0 || enemy.health <= 0) {
-    determineWinner({ player, enemy, timerId });
+    determineWinner();
   }
 }
 
@@ -257,6 +153,7 @@ window.addEventListener("keydown", (event) => {
         break;
     }
   }
+
   if (!enemy.dead) {
     switch (event.key) {
       case "ArrowLeft":
@@ -271,7 +168,9 @@ window.addEventListener("keydown", (event) => {
         enemy.jump();
         break;
       case "ArrowDown":
-        enemy.attack();
+        if (enemy.isAttacking == false) {
+          enemy.attack();
+        }
         break;
     }
   }

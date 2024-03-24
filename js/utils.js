@@ -1,3 +1,6 @@
+let timer = 60;
+let timerId;
+
 function isColliding({ attackBox, hitBox }) {
   return !(
     attackBox.position.x + attackBox.width < hitBox.position.x ||
@@ -7,20 +10,22 @@ function isColliding({ attackBox, hitBox }) {
   );
 }
 
-function determineWinner({ player, enemy, timerId }) {
+function determineWinner() {
   clearTimeout(timerId);
   document.getElementById("displayText").style.display = "flex";
   if (player.health == enemy.health) {
     document.getElementById("displayText").innerHTML = "Tie";
+    end = true;
   } else if (player.health > enemy.health) {
-    document.getElementById("displayText").innerHTML = "Player 1 Wins";
+    document.getElementById("displayText").innerHTML =
+      player.nameBox.text + " Wins";
+    end = true;
   } else {
-    document.getElementById("displayText").innerHTML = "Player 2 Wins";
+    document.getElementById("displayText").innerHTML =
+      enemy.nameBox.text + " Wins";
+    end = true;
   }
 }
-
-let timer = 60;
-let timerId;
 
 function decreaseTimer() {
   if (timer > 0) {
@@ -30,6 +35,6 @@ function decreaseTimer() {
   }
 
   if (timer == 0) {
-    determineWinner({ player, enemy, timerId });
+    determineWinner();
   }
 }
