@@ -379,7 +379,7 @@ poorGuy = new Fighter({
     height: 150,
   },
   nameBox: {
-    offset: { x: 5, y: -5 },
+    offset: { x: 7, y: -5 },
     text: "Poor Guy",
   },
   attackFrame: 2,
