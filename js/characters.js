@@ -253,7 +253,7 @@ kenji = new Fighter({
     offset: { x: 35, y: -30 },
     text: "Kenji",
   },
-  attackFrame: 1,
+  attackFrame: 2,
 });
 
 kingRichard = new Fighter({
